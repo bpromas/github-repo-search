@@ -7,14 +7,17 @@ import Pagination from "./components/Pagination";
 function App() {
   const [query, setQuery] = useState("");
   const [repos, setRepos] = useState<any[]>([]);
+  const [totalCount, setTotalCount] = useState(0);
   const [page, setPage] = useState(1);
   const [sort, setSort] = useState("stars");
+  const [order, setOrder] = useState("desc");
 
   async function handleSearch() {
     const res = await axios.get(
-      `https://api.github.com/search/repositories?q=${query}&sort=${sort}&order=desc&per_page=10&page=${page}`
+      `https://api.github.com/search/repositories?q=${query}+in:name&sort=${sort}&order=${order}&per_page=10&page=${page}`
     );
     setRepos(res.data.items);
+    setTotalCount(res.data.total_count)
   }
 
   function newSearch() {
@@ -28,19 +31,21 @@ function App() {
 
   useEffect(() => {
     if (query) handleSearch();
-  }, [page, sort]);
+  }, [page, sort, order]);
 
   return (
-    <section className="h-screen flex flex-col gap-3 items-center justify-center">
+    <section className="h-screen py-[5vh] flex flex-col gap-3 items-center justify-center">
       <SearchBar
         query={query}
         sort={sort}
+        order={order}
         onQueryChange={setQuery}
         onSortChange={setSort}
+        onOrderChange={setOrder}
         onSearch={newSearch}
       />
       <RepoList repos={repos} />
-      <Pagination page={page} onChangePage={handlePage} />
+      <Pagination page={page} totalCount={totalCount} onChangePage={handlePage} />
     </section>
   );
 }
