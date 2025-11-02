@@ -11,9 +11,9 @@ export default function RepoList({ repos }: RepoListProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-6xl p-4 overflow-y-auto">
-      {repos.map((repo) => (
-        <RepoItem key={repo.id} repo={repo} />
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-6xl p-4 overflow-y-auto overflow-x-hidden">
+      {repos.map((repo, index) => (
+        <RepoItem key={repo.id} index={index} repo={repo} />
       ))}
     </div>
   );
